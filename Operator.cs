@@ -5,19 +5,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApplication1.Algorithms
+namespace MyDemos.Algorithms
 {
-    class Operator
+    enum AssociationType
     {
-        public bool RightAssociative { get; }
+        Left,
+        Right
+    }
+    /// <summary>
+    /// Represents an binary/unary operator
+    /// </summary>
+    abstract class Operator
+    {
+        /// <summary>
+        /// Association of the operator
+        /// </summary>
+        public AssociationType AssociationType { get; }
+        /// <summary>
+        /// Precedence of the operator
+        /// </summary>
         public int Precedence { get; }
-
-        public string Symbol { get; }
-        public Operator(bool assoc, int prec, string sym)
-        {
-            RightAssociative = assoc;
-            Precedence = prec;
-            Symbol = sym;
-        }
     }
 }
+
