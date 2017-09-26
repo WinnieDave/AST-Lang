@@ -15,7 +15,7 @@ namespace MyDemos.Algorithms
     /// <summary>
     /// Represents an binary/unary operator
     /// </summary>
-    abstract class Operator
+     class Operator
     {
         /// <summary>
         /// Association of the operator
@@ -25,6 +25,17 @@ namespace MyDemos.Algorithms
         /// Precedence of the operator
         /// </summary>
         public int Precedence { get; }
+        /// <summary>
+        /// Symbol of the operator
+        /// </summary>
+        public string Symbol { get; }
+
+        public Operator(string symbol,AssociationType assocType,int prec)
+        {
+            this.Symbol = symbol;
+            this.AssociationType = assocType;
+            this.Precedence = prec;
+        }
     }
 }
 

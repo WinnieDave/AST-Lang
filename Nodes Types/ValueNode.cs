@@ -14,10 +14,10 @@ namespace MyDemos.Algorithms
         /// <summary>
         /// Value of the node
         /// </summary>
-        public object Value { get;}
+        public dynamic Value { get;}
 
         /// <param name="value">Value of the node</param>
-        public ValueNode(object value)
+        public ValueNode(dynamic value)
         { Value = value; }
     }
 }

@@ -7,15 +7,15 @@ namespace MyDemos.Algorithms
 {
     class ASTParser
     {
-        public static object Evaluate(SyntaxTreeNode root)
+        public static double Evaluate(SyntaxTreeNode root)
         {
             if (root is ValueNode)
-                return ((ValueNode)root).Value;
+                return double.Parse(((ValueNode)root).Value);
             else if (root is ExpressionNode)
             {
                 ExpressionNode exprNode = (ExpressionNode)root;
-                dynamic o1 = Evaluate(exprNode.Left);
-                dynamic o2 = Evaluate(exprNode.Right);
+                double o1 = Evaluate(exprNode.Left);
+                double o2 = Evaluate(exprNode.Right);
                 switch (exprNode.OpSymbol)
                 {
                     case "+":
@@ -70,7 +70,65 @@ namespace MyDemos.Algorithms
         //TODO:Implement tomorrow
         public static SyntaxTreeNode InfixToAST(string input)
         {
-           
+            string[] splited = input.Split(' ');//basic parsing
+            Dictionary<string, Operator> operators = new Dictionary<string, Operator>()
+            {
+                {"+",new Operator("+",AssociationType.Left,1)},
+                {"-",new Operator("-",AssociationType.Left,1)},
+                {"*",new Operator("*",AssociationType.Left,2)},
+                {"/",new Operator("/",AssociationType.Left,2)},
+                { "(",new Operator("(",AssociationType.Left,0)}
+            };
+            Stack<Operator> opStack = new Stack<Operator>();
+            Stack<SyntaxTreeNode> exprStack = new Stack<SyntaxTreeNode>();
+            foreach (var token in splited)
+            {
+                if (token.IsNumber())
+                {
+                    exprStack.Push(new ValueNode(token));
+                    continue;
+                }
+                if (token == "(")
+                {
+                    opStack.Push(operators[token]);
+                    continue;
+                }
+                if (token == ")")
+                {
+                    while (opStack.Count > 0 && (opStack.Peek().Symbol != "("))
+                    {
+                        var op = opStack.Pop();
+                        var rightExpr = exprStack.Pop();
+                        var leftExpr = exprStack.Pop();
+                        exprStack.Push(new ExpressionNode(op.Symbol, leftExpr, rightExpr));
+                    }
+                    opStack.Pop();//popping "("
+                    continue;
+                }
+                if (operators.ContainsKey(token))
+                {
+                    while (opStack.Count > 0 &&
+                        operators[token].AssociationType == AssociationType.Left &&
+                        operators[token].Precedence <= operators[opStack.Peek().Symbol].Precedence)
+                    {
+                        var op = opStack.Pop();
+                        var rightExpr = exprStack.Pop();
+                        var leftExpr = exprStack.Pop();
+                        exprStack.Push(new ExpressionNode(op.Symbol, leftExpr, rightExpr));
+                    }
+                    opStack.Push(operators[token]);
+                    continue;
+                }
+
+            }
+                while (opStack.Count > 0)
+                {
+                    var op = opStack.Pop();
+                    var rightExpr = exprStack.Pop();
+                    var leftExpr = exprStack.Pop();
+                    exprStack.Push(new ExpressionNode(op.Symbol, leftExpr, rightExpr));
+                }
+                return exprStack.Pop();
+            }
         }
     }
-}
