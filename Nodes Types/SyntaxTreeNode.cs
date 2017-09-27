@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyDemos.Algorithms
+namespace MyDemos.Algorithms.Nodes
 {
     /// <summary>
     /// Abstract base class for representing single node of the ast
